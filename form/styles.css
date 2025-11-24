@@ -1,0 +1,300 @@
+/* -------- GLOBAL -------- */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #4f46e5;
+}
+
+.topbar {
+  background: white;
+  padding: 16px 32px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-box input {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-right: 8px;
+}
+
+/* -------- LAYOUT -------- */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 16px;
+}
+
+/* -------- CARDS -------- */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.stat-card h4 {
+  margin-bottom: 8px;
+  color: #6b7280;
+}
+
+/* -------- FORM -------- */
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+input, select, textarea {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+textarea { min-height: 90px; resize: vertical; }
+
+.phone { display: flex; gap: 8px; width: 100%; }
+
+/* -------- BUTTONS -------- */
+.btn-primary {
+  padding: 12px 20px;
+  background: linear-gradient(135deg,#6366f1,#4338ca);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-primary:hover { background: linear-gradient(135deg,#4f46e5,#3730a3); }
+
+.btn-small {
+  padding: 6px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-small.confirm { background: #4ade80; color: #065f46; }
+.btn-small.cancel { background: #f87171; color: #7f1d1d; }
+
+/* -------- CHAT -------- */
+.chat-window {
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fafafa;
+}
+.bot-message {
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 10px 14px;
+  border-radius: 16px 16px 16px 4px;
+  margin-bottom: 12px;
+  max-width: 80%;
+  font-size: 0.9rem;
+}
+
+/* -------- TABLE -------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+thead { background: #f3f4f6; }
+th, td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.status.pending { color: #d97706; font-weight: 600; }
+.status.confirmed { color: #16a34a; font-weight: 600; }
+.status.cancelled { color: #dc2626; font-weight: 600; }
+
+/* -------- ANIMATIONS -------- */
+.animate { animation: fadeInUp 0.5s ease both; }
+@keyframes fadeInUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
+/* ...el teu CSS existent... */
+
+.clickable { cursor: pointer; text-decoration: underline; }
+
+/* -------- MODAL -------- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 80px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover { color: #000; }
+
+.completed-item {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+}
+.clickable { cursor: pointer; text-decoration: underline; }
+
+/* -------- MODAL -------- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 80px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover { color: #000; }
+
+.completed-item {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+}
+/* -------- CALENDARI -------- */
+#calendar {
+  margin-top: 16px;
+  text-align: center;
+}
+.calendar-header {
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 12px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.day, .day-name {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 0.9rem;
+  position: relative;
+}
+.day-name {
+  font-weight: 600;
+  background: transparent;
+}
+.day {
+  cursor: pointer;
+  transition: 0.2s;
+}
+.day:hover {
+  background: #e0e7ff;
+}
+.day.selected {
+  background: #4338ca;
+  color: white;
+}
+.day.empty {
+  background: transparent;
+  cursor: default;
+}
+.badge {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  background: #6366f1;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+.day.selected {
+  background: #4338ca;
+  color: white;
+}
