@@ -25,7 +25,7 @@ document.getElementById('reserveForm').addEventListener('submit', async (e) => {
     addChatBotMessage(`Reserva rebuda. Hem enviat confirmació a ${data.email}.`);
     form.reset();
   } catch (err) {
-    addChatBotMessage("Hi ha hagut un error. Torna-ho a provar.");
+    addChatBotMessage(err.message || "Error enviant la reserva.");
   }
 });
 

@@ -89,6 +89,7 @@ app.get("/api/reservations", async (req, res) => {
     const { data, error } = await supabase
       .from("reservations")
       .select("*")
+      .eq("status", "pending")
       .order("date", { ascending: true })
       .order("time", { ascending: true });
 
@@ -161,6 +162,7 @@ app.get("/api/bookings", async (req, res) => {
     const { data, error } = await supabase
       .from("reservations")
       .select("time, status")
+      .eq("status", "pending")
       .eq("date", date)
       .neq("status", "cancelled");
 
