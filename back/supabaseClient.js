@@ -1,4 +1,5 @@
 // back/supabaseClient.js
+// This helper creates a Supabase client using environment variables.
 require("dotenv").config();
 const { createClient } = require("@supabase/supabase-js");
 

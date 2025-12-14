@@ -19,8 +19,8 @@ document.getElementById('btnAdminLogin').addEventListener('click', async () => {
       token = j.token;
       await loadReservations();
       renderCalendar();
-      highlightToday(); // 🔹 Ressalta el dia actual
-      setInterval(loadReservations, 5000); // 🔹 recàrrega automàtica
+      highlightToday(); //  Ressalta el dia actual
+      setInterval(loadReservations, 5000); //  recàrrega automàtica
       document.getElementById('salesCount').addEventListener('click', showCompletedModal);
     } else alert(j.message || "No autoritzat");
   } catch {
@@ -37,7 +37,7 @@ async function loadReservations() {
   allReservations = await res.json();
   updateStats();
   renderTable(selectedDate);
-  updateCalendarBadges(); // 🔹 Actualitza badges del calendari automàticament
+  updateCalendarBadges(); //  Actualitza badges del calendari automàticament
 }
 
 // --- TAULA DE RESERVES ---
@@ -74,7 +74,7 @@ async function completeReservation(id, tr) {
   });
   tr.remove();
   updateStats();
-  updateCalendarBadges(); // 🔹 refresca badges si s’acaba una reserva
+  updateCalendarBadges(); //  refresca badges si s’acaba una reserva
 }
 
 // --- ESTADÍSTIQUES ---
@@ -82,8 +82,7 @@ function updateStats() {
   document.getElementById('totalCount').textContent = allReservations.length;
   document.getElementById('pendingCount').textContent = allReservations.filter(r => r.status === 'pending').length;
   document.getElementById('confirmedCount').textContent = allReservations.filter(r => r.status === 'confirmed').length;
-  document.getElementById('salesCount').textContent =
-    (allReservations.filter(r => r.status === 'confirmed' || r.status === 'completed').length * 25) + " €";
+  document.getElementById('salesCount').textContent = (allReservations.filter(r => r.status === 'confirmed' || r.status === 'completed').length * 25) + " €";
 }
 
 // --- ESCAPE HTML ---
@@ -116,7 +115,7 @@ async function showCompletedModal() {
 spanClose.onclick = () => modal.style.display = "none";
 window.onclick = e => { if (e.target == modal) modal.style.display = "none"; };
 
-// --- 📅 CALENDARI ---
+// ---  CALENDARI ---
 function renderCalendar() {
   const calendar = document.getElementById('calendar');
   calendar.innerHTML = '';
@@ -176,7 +175,7 @@ function renderCalendar() {
   }
 }
 
-// --- 🌟 RESSALTA DIA D'AVUI ---
+// ---  RESSALTA DIA D'AVUI ---
 function highlightToday() {
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -191,7 +190,7 @@ function highlightToday() {
   });
 }
 
-// --- 🔹 ACTUALITZACIÓ AUTOMÀTICA BADGES ---
+// ---  ACTUALITZACIÓ AUTOMÀTICA BADGES ---
 function updateCalendarBadges() {
   const allDays = document.querySelectorAll('.calendar-grid .day');
   const today = new Date();

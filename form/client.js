@@ -33,7 +33,6 @@ function generarHores(startHour = 9, endHour = 22, interval = 30) {
   const hores = [];
   let currentMinutes = startHour * 60;
   const endMinutes = endHour * 60;
-
   while (currentMinutes <= endMinutes) {
     const hh = String(Math.floor(currentMinutes / 60)).padStart(2, "0");
     const mm = String(currentMinutes % 60).padStart(2, "0");

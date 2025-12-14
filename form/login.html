@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login / Registre</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">✂️ Perruqueria</h1>
+  </header>
+  <main class="container">
+    <section class="card animate">
+      <h2 id="formTitle">Inicia sessió</h2>
+      <!-- Login form -->
+      <div id="loginBox">
+        <form id="loginForm" class="form">
+          <div class="form-row">
+            <input id="loginEmail" type="email" placeholder="Correu electrònic" required />
+          </div>
+          <div class="form-row">
+            <input id="loginPassword" type="password" placeholder="Contrasenya" required />
+          </div>
+          <button type="submit" class="btn-primary">Inicia sessió</button>
+        </form>
+        <p style="margin-top:12px">No tens compte? <a href="#" id="showRegister">Registra't</a></p>
+        <button onclick="window.location.href='/client.html'" id="anonimo" class="btn-primary " style="margin-top:12px">Entra sense iniciar sessió</button>
+      </div>
+      <!-- Register form -->
+      <div id="registerBox" style="display:none">
+        <form id="registerForm" class="form">
+          <div class="form-row">
+            <input id="registerName" name="name" type="text" placeholder="Nom" required />
+            <input id="registerSurname" name="surname" type="text" placeholder="Cognoms" required />
+            <input id="registerEmail" name="email" type="email" placeholder="Correu electrònic" required />
+            <input id="registerPhone" name="phone"type="tel" placeholder="Telèfon" required />
+          </div>
+          <div class="form-row">
+            <input id="registerPassword" name="password" type="password" placeholder="Contrasenya" required />
+          </div>
+          <div class="form-row">
+            <input id="registerPassword2" type="password" placeholder="Repeteix la contrasenya" required />
+          </div>
+          <button type="submit" class="btn-primary">Registrar</button>
+        </form>
+        <p style="margin-top:12px">Ja tens compte? <a href="#" id="showLogin">Inicia sessió</a></p>
+        
+      </div>
+      <p id="error" style="color:#dc2626; margin-top:12px"></p>
+    </section>
+  </main>
+  <script src="login.js"></script>
+</body>
+</html>
