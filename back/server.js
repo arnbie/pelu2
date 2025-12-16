@@ -170,6 +170,35 @@ app.post("/api/reservations", async (req, res) => {
     res.status(500).json({ message: "Error intern del servidor" });
   }
 });
+//Saber si admin
+// Saber si admin
+app.get("/api/isAdmin/:email", async (req, res) => {
+  try {
+    const { email } = req.params;  // Obtener el email desde los parámetros de la URL
+    
+    // Buscar el usuario en la base de datos usando el email
+    const { data, error } = await supabase
+      .from("Usuaris")
+      .select("admin")
+      .eq("email", email)  // Aquí buscamos por email
+      .single();
+
+    if (error) {
+      console.error("Error Supabase select (isAdmin):", error);
+      return res.status(500).json({ message: "Error obtenint l'usuari" });
+    }
+
+    if (!data) {
+      return res.status(404).json({ message: "No trobat" });
+    }
+
+    res.json({ isAdmin: data.admin });  // Devolver el valor de admin (booleano)
+  } catch (err) {
+    console.error("Error servidor GET /api/isAdmin/:email:", err);
+    res.status(500).json({ message: "Error intern del servidor" });
+  }
+});
+
 
 // Obtenir reserves
 app.get("/api/reservations", async (req, res) => {
