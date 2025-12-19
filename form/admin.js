@@ -6,38 +6,94 @@ let selectedDate = null;
 // --- LOGIN ---
 document.getElementById('btnAdminLogin').addEventListener('click', async () => {
   const email = document.getElementById('adminEmail').value.trim();
+  
   if (!email) return alert('Introdueix el correu admin');
 
   try {
-    const r = await fetch(apiBase + "/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+    const r = await fetch(apiBase + `/isAdmin/${email}`, {
+        // ... (tu fetch igual que antes) ...
     });
     const j = await r.json();
+
+    // LOG 1: Ver si llegamos a la validación
+    console.log("1. Datos recibidos (j):", j);
+
     if (r.ok) {
-      token = j.token;
-      await loadReservations();
-      renderCalendar();
-      highlightToday(); //  Ressalta el dia actual
-      setInterval(loadReservations, 5000); //  recàrrega automàtica
-      document.getElementById('salesCount').addEventListener('click', showCompletedModal);
-    } else alert(j.message || "No autoritzat");
-  } catch {
-    alert("Error al connectar");
+      if (j.isAdmin) {
+        // LOG 2: ¡Hemos entrado al if!
+        console.log("2. El usuario ES admin. Iniciando carga...");
+        
+        token = j.token;
+        
+        // LOG 3: Justo antes de llamar a la función sospechosa
+        console.log("3. Voy a llamar a loadReservations...");
+        
+        // Llamada a la función
+        await loadReservations();
+
+        // LOG 4: Si ves esto, loadReservations funcionó bien
+        console.log("4. loadReservations terminó correctamente.");
+
+        renderCalendar();
+        highlightToday();
+        setInterval(loadReservations, 5000);
+        
+        // Verificación extra por si el elemento no existe
+        const btnSales = document.getElementById('salesCount');
+        if (btnSales) {
+            btnSales.addEventListener('click', showCompletedModal);
+        } else {
+            console.warn("Cuidado: No encuentro el elemento 'salesCount' en el HTML");
+        }
+
+      } else {
+        console.log("El usuario NO es admin. isAdmin vale:", j.isAdmin);
+        alert("No tens permisos d'administrador");
+      }
+    } else {
+      alert(j.message || "No autoritzat");
+    }
+  } catch (error) { // <--- IMPORTANTE: captura el error con nombre
+    // Aquí veremos por qué falló loadReservations si es que falló
+    console.error("ERROR CRÍTICO:", error); 
+    alert("Error al connectar: " + error.message);
   }
 });
-
 // --- CÀRREGA DE RESERVES ---
 async function loadReservations() {
-  if (!token) return;
-  const res = await fetch(apiBase + "/reservations", {
-    headers: { "Authorization": "Bearer " + token }
-  });
-  allReservations = await res.json();
-  updateStats();
-  renderTable(selectedDate);
-  updateCalendarBadges(); //  Actualitza badges del calendari automàticament
+  console.log("--> Iniciando loadReservations...");
+
+  
+  
+  try {
+    const res = await fetch(apiBase + "/reservations", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    // Verificamos si la petición fue bien (Status 200)
+    if (!res.ok) {
+        console.error("Error al pedir reservas. Status:", res.status);
+        return;
+    }
+
+    allReservations = await res.json();
+
+    // --- AQUÍ ESTÁ LO QUE NECESITAS ---
+    console.log("📦 LISTA COMPLETA DE RESERVAS (allReservations):", allReservations);
+    
+    // Truco: Si es una lista, esto se ve mucho mejor:
+    // console.table(allReservations); 
+    // ----------------------------------
+
+    updateStats();
+    renderTable(selectedDate);
+    updateCalendarBadges(); 
+    
+    console.log("--> loadReservations terminó con éxito.");
+
+  } catch (error) {
+    console.error("Hubo un error dentro de loadReservations:", error);
+  }
 }
 
 // --- TAULA DE RESERVES ---

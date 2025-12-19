@@ -44,20 +44,34 @@ function generarHores(startHour = 9, endHour = 22, interval = 30) {
 
 document.getElementById("date").addEventListener("change", async (e) => {
   const date = e.target.value;
+  console.log("📅 Fecha seleccionada:", date);
+  
   const selectHora = document.getElementById("time");
   selectHora.innerHTML = "<option value=''>Selecciona hora</option>";
+  
   if (!date) return;
-
+  
   let ocupades = [];
   try {
-    const res = await fetch(`${apiBase}/bookings?date=${date}`);
+    const url = `${apiBase}/bookings?date=${date}`;
+    console.log("🔗 URL fetch:", url);
+    
+    const res = await fetch(url);
+    console.log("📡 Response status:", res.status);
+    
     const data = await res.json();
+    console.log("📦 Data recibida:", data);
+    
     ocupades = data.reservedTimes || [];
+    console.log("🚫 Horas ocupadas:", ocupades);
   } catch (err) {
-    console.error("Error carregant hores:", err);
+    console.error("❌ Error carregant hores:", err);
   }
-
+  
   const hores = generarHores(9, 22, 30);
+  console.log("⏰ Horas generadas:", hores);
+  console.log("📊 Total horas generadas:", hores.length);
+  
   hores.forEach(h => {
     const opt = document.createElement("option");
     opt.value = h;
@@ -65,8 +79,9 @@ document.getElementById("date").addEventListener("change", async (e) => {
     if (ocupades.includes(h)) opt.disabled = true;
     selectHora.appendChild(opt);
   });
+  
+  console.log("✅ Options añadidas al select:", selectHora.children.length);
 });
-
 function addChatBotMessage(text){
   const win = document.getElementById('chatWindow');
   if (!win) return;
@@ -76,3 +91,6 @@ function addChatBotMessage(text){
   win.appendChild(el);
   win.scrollTop = win.scrollHeight;
 }
+
+
+

@@ -10,21 +10,17 @@
   <header class="topbar">
     <h1 class="logo">✂️ Perruqueria</h1>
   </header>
-
   <main class="container grid-2">
-    <!-- Formulari -->
     <section class="card form-card">
       <h2 class="title">Demana la teva cita</h2>
       <form id="reserveForm" class="form">
         <div class="form-row">
-          <input name="firstName" placeholder="Nom" required />
-          <input name="lastName" placeholder="Cognoms" required />
+          <input id="firstName" name="firstName" placeholder="Nom" required />
+          <input id="lastName" name="lastName" placeholder="Cognoms" required />
         </div>
-
         <div class="form-row">
-          <input name="email" type="email" placeholder="Correu electrònic" required />
+          <input id="email" name="email" type="email" placeholder="Correu electrònic" required />
         </div>
-
         <div class="form-row">
           <div class="phone">
             <select id="prefix" name="prefix">
@@ -33,10 +29,9 @@
               <option value="+44"> +44</option>
               <option value="+39"> +39</option>
             </select>
-            <input name="phone" placeholder="Telèfon" required />
+            <input id="phoneInput" name="phone" placeholder="Telèfon" required />
           </div>
         </div>
-
         <div class="form-row">
           <select name="service" id="service" required>
             <option value="">Selecciona un servei</option>
@@ -47,29 +42,46 @@
             <option value="tall_infantil"> Tall infantil</option>
           </select>
         </div>
-
         <div class="form-row">
           <input id="date" name="date" type="date" required />
           <select id="time" name="time" required>
             <option value="">Selecciona hora</option>
           </select>
         </div>
-
         <div class="form-row">
           <textarea name="notes" placeholder="Observacions (opcional)"></textarea>
         </div>
-
         <button type="submit" class="btn-primary">Reservar</button>
       </form>
     </section>
-
-    <!-- Chatbot -->
     <section class="card">
       <h2>Assistència</h2>
       <div id="chatWindow" class="chat-window"></div>
     </section>
   </main>
 
+  <!-- Script inline para cargar datos de sesión -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("/api/auth/me")
+        .then((res) => {
+          if (res.ok) return res.json();
+          throw new Error("No loguejat");
+        })
+        .then((user) => {
+          if(user.nom) document.getElementById("firstName").value = user.nom;
+          if(user.cognom) document.getElementById("lastName").value = user.cognom;
+          if(user.email) document.getElementById("email").value = user.email;
+          if(user.telefon) document.getElementById("phoneInput").value = user.telefon;
+          console.log("Dades carregades des de la sessió:", user);
+        })
+        .catch((err) => {
+          console.log("No hi ha usuari loguejat o error:", err);
+        });
+    });
+  </script>
+
+  <!-- ⭐ AÑADE ESTO - Importa client.js -->
   <script src="client.js"></script>
 </body>
 </html>
