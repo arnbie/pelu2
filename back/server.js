@@ -1,19 +1,32 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const { v4: uuidv4 } = require("uuid");
-const path = require("path");
-const bcrypt = require("bcryptjs"); // ✅ usa bcryptjs
-const { supabase } = require("./supabaseClient");
-
+const express = require('express');
+const session = require('express-session');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
 const PORT = 3000;
+// --- AFEGEIX AIXÒ AL PRINCIPI ---
+require('dotenv').config(); // Opcional però recomanat per seguretat
+const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcrypt'); // Necessari per fer el hash i compare
+// --------------------------------
+const { supabase } = require("./supabaseClient");
+// Middleware de session (debe ir primero)
+app.use(session({
+  secret: 'Mina',  // Cambia esta clave por una más segura
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }  // Para desarrollo, usa secure: false, cámbialo a true en producción si usas HTTPS
+}));
 
+// Middleware de CORS y bodyParser
 app.use(cors());
 app.use(bodyParser.json());
 
-// Servir fitxers estàtics del directori /form
+// Servir archivos estáticos
 app.use(express.static(path.join(__dirname, "../form")));
+
+// Aquí van tus rutas...
 
 // ---------------- API ----------------
 
@@ -90,7 +103,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     const { data: user, error } = await supabase
       .from("Usuaris")
-      .select("id, email, password, admin")
+      .select("id, email, password, admin, nom, cognom, telefon")
       .eq("email", email)
       .single();
 
@@ -99,22 +112,83 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(401).json({ message: "Credencials incorrectes" });
     }
 
+    // 1. Comprobamos contraseña PRIMERO
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) {
       return res.status(401).json({ message: "Credencials incorrectes" });
     }
 
+    // 2. Si es correcta, guardamos sesión
+    req.session.user = user;
+
+    // 3. Enviamos los datos al frontend (incluyendo el NOM)
     return res.json({
-      token: "fake-jwt-token", // luego lo hacemos JWT
+      token: "fake-jwt-token",
       user: {
         id: user.id,
         email: user.email,
         admin: !!user.admin,
+        nom: user.nom,       // <--- AÑADIDO: Importante para tu HTML
+        cognom: user.cognom,  // <--- AÑADIDO: Por si acaso
+        telefon: user.telefon
       },
     });
   } catch (err) {
     console.error("Error servidor POST /api/auth/login:", err);
     res.status(500).json({ message: "Error intern del servidor" });
+  }
+  fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, password: password })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.user) {
+        // --- ESTA ES LA LÍNEA QUE TE FALTA ---
+        // Guardamos el usuario entero (con nom y cognom) en la memoria
+        localStorage.setItem('usuario', JSON.stringify(data.user)); 
+        // -------------------------------------
+
+        console.log("Usuario guardado:", data.user); // Para comprobar en consola
+        window.location.href = "/reserva.html"; // O el nombre de tu archivo de reserva
+    } else {
+        alert("Error: " + data.message);
+    }
+})
+.catch(error => console.error('Error:', error));
+// ... dentro de tu función que maneja el submit del login ...
+
+fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, password: password }) // Tus variables aquí
+})
+.then(res => res.json())
+.then(data => {
+    if (data.user) {
+        // 👇👇 ESTO ES LO QUE TE FALTA 👇👇
+        // 1. Guardamos los datos en el navegador
+        localStorage.setItem('usuario', JSON.stringify(data.user)); 
+        
+        // 2. Comprobamos en la consola que se ha guardado (para ver si funciona)
+        console.log("GUARDADO EN MEMORIA:", data.user); 
+
+        // 3. Redirigimos a la reserva
+        window.location.href = "/"; // O "/reserva.html", la ruta de tu foto
+    } else {
+        alert("Error: Credencials incorrectes");
+    }
+})
+.catch(err => console.error(err));
+});
+
+app.get("/api/auth/me", (req, res) => {
+  if (req.session && req.session.user) {
+    // Retornem l'usuari guardat a la sessió
+    res.json(req.session.user);
+  } else {
+    res.status(401).json({ message: "No hi ha sessió activa" });
   }
 });
 
@@ -271,27 +345,27 @@ app.delete("/api/reservations", async (req, res) => {
 });
 
 // Hores ocupades per data
+// Rutas disponibles para datos
 app.get("/api/bookings", async (req, res) => {
   try {
     const { date } = req.query;
     if (!date) return res.json({ reservedTimes: [] });
-
+    
     const { data, error } = await supabase
       .from("reservations")
       .select("time, status")
-      .eq("status", "pending")
       .eq("date", date)
-      .neq("status", "cancelled");
-
+      .eq("status", "pending"); // Solo esta condición es necesaria
+    
     if (error) {
       console.error("Error Supabase bookings:", error);
       return res.status(500).json({ message: "Error obtenint bookings" });
     }
-
+    
     const reservedTimes = (data || []).map((r) => r.time);
     res.json({ reservedTimes });
   } catch (err) {
-    console.error("Error servidor GET /api/bookings:", err);
+    console.error("Error servidor GET /api/bookings/", err);
     res.status(500).json({ message: "Error intern del servidor" });
   }
 });
